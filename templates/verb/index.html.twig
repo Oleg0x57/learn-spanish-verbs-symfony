@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Verb index{% endblock %}
+
+{% block body %}
+    <h1>Verb index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Infinitivo</th>
+                <th>ModoIndicativo</th>
+                <th>PreteritoSimple</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for verb in verbs %}
+            <tr>
+                <td>{{ verb.id }}</td>
+                <td>{{ verb.infinitivo }}</td>
+                <td>{{ verb.modoIndicativo }}</td>
+                <td>{{ verb.preteritoSimple }}</td>
+                <td>
+                    <a href="{{ path('verb_show', {'id': verb.id}) }}">show</a>
+                    <a href="{{ path('verb_edit', {'id': verb.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('verb_new') }}">Create new</a>
+{% endblock %}
