@@ -2,8 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Verb;
-use App\Repository\VerbRepository;
+use App\Entity\Verb as VerbEntity;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +16,7 @@ class DefaultController extends AbstractController
      */
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $verbsList = $entityManager->getRepository(Verb::class)->findAll();
+        $verbsList = $entityManager->getRepository(VerbEntity\AbstractTimeForm::class)->findAll();
         dd($verbsList);
         
         return $this->render('default/index.html.twig', [
@@ -25,17 +24,59 @@ class DefaultController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/verb-add", name="verb_add")
-     */
-    public function verbAdd(Request $request, EntityManagerInterface $entityManager): Response
+    public function tomarModo(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $verb = new Verb();
-        $verb->setInfinitivo('tomar');
-        $verb->setModoIndicativo('tomo');
-        $verb->setPreteritoSimple('tome');
+        $infinitivo = $entityManager->getRepository(VerbEntity\Infinitivo::class)->findOneBy(['title' => 'tomar']);
+        
+        if (!$infinitivo) {
+            $infinitivo = new VerbEntity\Infinitivo();
+            $infinitivo->setTitle('tomar');
+            $entityManager->persist($infinitivo);
+        }
 
-        $entityManager->persist($verb);
+        $modoIndicativo = new VerbEntity\ModoIndicativo();
+        $modoIndicativo->setYo('tomo');
+        $modoIndicativo->setTu('tomas');
+        $modoIndicativo->setEl('toma');
+        $modoIndicativo->setElla('toma');
+        $modoIndicativo->setUsted('toma');
+        $modoIndicativo->setNosotros('tomamos');
+        $modoIndicativo->setVosotros('tomais');
+        $modoIndicativo->setEllos('toman');
+        $modoIndicativo->setInfinitivo($infinitivo);
+
+        $entityManager->persist($modoIndicativo);
+
+        $entityManager->flush();
+
+        return $this->render('default/index.html.twig', [
+            'controller_name' => 'DefaultController',
+        ]);
+    }
+
+    public function tomarPreterio(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $infinitivo = $entityManager->getRepository(VerbEntity\Infinitivo::class)->findOneBy(['title' => 'tomar']);
+        
+        if (!$infinitivo) {
+            $infinitivo = new VerbEntity\Infinitivo();
+            $infinitivo->setTitle('tomar');
+            $entityManager->persist($infinitivo);
+        }
+
+        $preterioSimple = new VerbEntity\PreterioSimple();
+        $preterioSimple->setYo('tome');
+        $preterioSimple->setTu('tomaste');
+        $preterioSimple->setEl('tomo');
+        $preterioSimple->setElla('tomo');
+        $preterioSimple->setUsted('tomo');
+        $preterioSimple->setNosotros('tomamos');
+        $preterioSimple->setVosotros('tomasteis');
+        $preterioSimple->setEllos('tomaron');
+        $preterioSimple->setInfinitivo($infinitivo);
+
+        $entityManager->persist($preterioSimple);
+
         $entityManager->flush();
 
         return $this->render('default/index.html.twig', [
