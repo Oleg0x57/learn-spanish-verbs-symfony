@@ -10,8 +10,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ModoIndicativo extends AbstractTimeForm
 {
-    public static function getTimeType()
+    public static function getTimeType(): string
     {
         return TimeTypes::MODO_INDICATIVO;
+    }
+
+    public static function getTimeTypeTitle(): string
+    {
+        return TimeTypes::MAP_TITLES[self::getTimeType()];
     }
 }

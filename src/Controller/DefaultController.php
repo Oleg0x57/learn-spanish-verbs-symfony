@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Verb as VerbEntity;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,15 +13,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends AbstractController
 {   
     /**
-     * @Route("/default", name="default")
+     * @Route("/", name="verbs_list")
      */
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $verbsList = $entityManager->getRepository(VerbEntity\AbstractTimeForm::class)->findAll();
-        dd($verbsList);
+        $verbsList = $entityManager->getRepository(VerbEntity\Infinitivo::class)->findAll();
         
         return $this->render('default/index.html.twig', [
-            'controller_name' => 'DefaultController',
+            'verbsList' => $verbsList,
         ]);
     }
 
@@ -87,6 +87,35 @@ class DefaultController extends AbstractController
 
         return $this->render('default/index.html.twig', [
             'controller_name' => 'DefaultController',
+        ]);
+    }
+
+    /**
+     * @Route("/edit-verb/{id}", methods="GET|POST", name="edit_verb", requirements={"id"="\d+"})
+     * @Route("/add-verb", methods="GET|POST", name="add_verb")
+     */
+    public function editVerb(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        if ($id) {
+            $infinitivo = $entityManager->getRepository(VerbEntity\Infinitivo::class)->find($id);
+        } else {
+            $infinitivo = new VerbEntity\Infinitivo();
+        }
+
+        $form = $this->createFormBuilder($infinitivo)->add('title', TextType::class)->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            $entityManager->flush();
+
+            $this->redirectToRoute('edit_verb', ['id' => $infinitivo->getId()]);
+        }
+        
+        return $this->render('default/edit_verb.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 }

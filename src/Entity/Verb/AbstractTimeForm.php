@@ -2,6 +2,7 @@
 
 namespace App\Entity\Verb;
 
+use App\Enum\Verb\TimeTypes;
 use App\Repository\Verb\TimeFormRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -69,6 +70,8 @@ abstract class AbstractTimeForm
      * @ORM\JoinColumn(nullable=false)
      */
     private $infinitivo;
+
+    abstract public static function getTimeType(): string;
 
     public function getId(): ?int
     {
