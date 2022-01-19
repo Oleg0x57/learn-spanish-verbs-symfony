@@ -2,7 +2,7 @@
 
 namespace App\Entity\Verb;
 
-use App\Repository\Verb\ModoIndicativoRepository;
+use App\Repository\Verb\TimeFormRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

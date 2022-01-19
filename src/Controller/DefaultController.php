@@ -24,6 +24,9 @@ class DefaultController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/add-tomar-modo", name="add_tomar_modo")
+     */
     public function tomarModo(Request $request, EntityManagerInterface $entityManager): Response
     {
         $infinitivo = $entityManager->getRepository(VerbEntity\Infinitivo::class)->findOneBy(['title' => 'tomar']);
@@ -54,6 +57,9 @@ class DefaultController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/add-tomar-preterio", name="add_tomar_preterio")
+     */
     public function tomarPreterio(Request $request, EntityManagerInterface $entityManager): Response
     {
         $infinitivo = $entityManager->getRepository(VerbEntity\Infinitivo::class)->findOneBy(['title' => 'tomar']);
