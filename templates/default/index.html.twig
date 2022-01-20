@@ -1,44 +1,63 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Verbs list{% endblock %}
+{% block title %}Verbs list
+{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h1>Verbs</h1>
-            {% for verb in verbsList %}
-                <div class="row"><h4>{{ verb.title|e }}</h4>
-                    <table>
-                        <thead>
-                          <tr>
-                              <th>type</th>
-                              <th>yo</th>
-                              <th>tu</th>
-                              <th>el</th>
-                              <th>ella</th>
-                              <th>usted</th>
-                              <th>nosotros</th>
-                              <th>vosotros</th>
-                              <th>ellos</th>
-                          </tr>
-                        </thead>
-                
-                        <tbody>
-                            {% for timeForm in verb.timeForms %}
-                                <tr>
-                                  <td>{{timeForm.getTimeTypeTitle()}}</td>
-                                  <td>{{timeForm.yo}}</td>
-                                  <td>{{timeForm.tu}}</td>
-                                  <td>{{timeForm.el}}</td>
-                                  <td>{{timeForm.ella}}</td>
-                                  <td>{{timeForm.usted}}</td>
-                                  <td>{{timeForm.nosotros}}</td>
-                                  <td>{{timeForm.vosotros}}</td>
-                                  <td>{{timeForm.ellos}}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% endfor %}
-      </div>
+	<h1>Verbs</h1>
+	<a class="waves-effect waves-light btn" href="{{ path('add_verb') }}">
+		<i class="material-icons left">add</i>Add</a>
+	{% for verb in verbsList %}
+		<div class="row">
+			<h4>{{ verb.title|e }}</h4>
+			<a class="waves-effect waves-light btn" href="{{ path('edit_verb', {'id': verb.id}) }}">
+				<i class="material-icons left">edit</i>Edit verb
+			</a>
+
+			<a class="waves-effect waves-light btn" href="{{ path('add_modo_indicativo', {'id': verb.id}) }}">
+				<i class="material-icons left">add</i>Add modo indicativo
+			</a>
+
+			<a class="waves-effect waves-light btn" href="{{ path('add_preterio_simple', {'id': verb.id}) }}">
+				<i class="material-icons left">add</i>Add preterio simple
+			</a>
+			<table>
+				<thead>
+					<tr>
+						<th>type</th>
+						<th>yo</th>
+						<th>tu</th>
+						<th>el</th>
+						<th>ella</th>
+						<th>usted</th>
+						<th>nosotros</th>
+						<th>vosotros</th>
+						<th>ellos</th>
+						<th></th>
+					</tr>
+				</thead>
+
+				<tbody>
+					{% for timeForm in verb.timeForms %}
+						<tr>
+							<td>{{timeForm.getTimeTypeTitle()}}</td>
+							<td>{{timeForm.yo}}</td>
+							<td>{{timeForm.tu}}</td>
+							<td>{{timeForm.el}}</td>
+							<td>{{timeForm.ella}}</td>
+							<td>{{timeForm.usted}}</td>
+							<td>{{timeForm.nosotros}}</td>
+							<td>{{timeForm.vosotros}}</td>
+							<td>{{timeForm.ellos}}</td>
+							<td>
+								<a class="waves-effect waves-light btn" href="{{ path('edit_verb_form', {'id': timeForm.id}) }}">
+									<i class="material-icons left">edit</i>Edit
+								</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	{% endfor %}
 {% endblock %}

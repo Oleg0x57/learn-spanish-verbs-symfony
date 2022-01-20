@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends AbstractController
 {   
     /**
-     * @Route("/", name="verbs_list")
+     * @Route("/", name="list_verbs")
      */
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -21,72 +21,6 @@ class DefaultController extends AbstractController
         
         return $this->render('default/index.html.twig', [
             'verbsList' => $verbsList,
-        ]);
-    }
-
-    /**
-     * @Route("/add-tomar-modo", name="add_tomar_modo")
-     */
-    public function tomarModo(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $infinitivo = $entityManager->getRepository(VerbEntity\Infinitivo::class)->findOneBy(['title' => 'tomar']);
-        
-        if (!$infinitivo) {
-            $infinitivo = new VerbEntity\Infinitivo();
-            $infinitivo->setTitle('tomar');
-            $entityManager->persist($infinitivo);
-        }
-
-        $modoIndicativo = new VerbEntity\ModoIndicativo();
-        $modoIndicativo->setYo('tomo');
-        $modoIndicativo->setTu('tomas');
-        $modoIndicativo->setEl('toma');
-        $modoIndicativo->setElla('toma');
-        $modoIndicativo->setUsted('toma');
-        $modoIndicativo->setNosotros('tomamos');
-        $modoIndicativo->setVosotros('tomais');
-        $modoIndicativo->setEllos('toman');
-        $modoIndicativo->setInfinitivo($infinitivo);
-
-        $entityManager->persist($modoIndicativo);
-
-        $entityManager->flush();
-
-        return $this->render('default/index.html.twig', [
-            'controller_name' => 'DefaultController',
-        ]);
-    }
-
-    /**
-     * @Route("/add-tomar-preterio", name="add_tomar_preterio")
-     */
-    public function tomarPreterio(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $infinitivo = $entityManager->getRepository(VerbEntity\Infinitivo::class)->findOneBy(['title' => 'tomar']);
-        
-        if (!$infinitivo) {
-            $infinitivo = new VerbEntity\Infinitivo();
-            $infinitivo->setTitle('tomar');
-            $entityManager->persist($infinitivo);
-        }
-
-        $preterioSimple = new VerbEntity\PreterioSimple();
-        $preterioSimple->setYo('tome');
-        $preterioSimple->setTu('tomaste');
-        $preterioSimple->setEl('tomo');
-        $preterioSimple->setElla('tomo');
-        $preterioSimple->setUsted('tomo');
-        $preterioSimple->setNosotros('tomamos');
-        $preterioSimple->setVosotros('tomasteis');
-        $preterioSimple->setEllos('tomaron');
-        $preterioSimple->setInfinitivo($infinitivo);
-
-        $entityManager->persist($preterioSimple);
-
-        $entityManager->flush();
-
-        return $this->render('default/index.html.twig', [
-            'controller_name' => 'DefaultController',
         ]);
     }
 
@@ -109,12 +43,131 @@ class DefaultController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
+            $entityManager->persist($infinitivo);
             $entityManager->flush();
 
-            $this->redirectToRoute('edit_verb', ['id' => $infinitivo->getId()]);
+            return $this->redirectToRoute('list_verbs');
         }
         
         return $this->render('default/edit_verb.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/edit-verb-form/{id}", methods="GET|POST", name="edit_verb_form", requirements={"id"="\d+"})
+     */
+    public function editVerbForm(Request $request, EntityManagerInterface $entityManager, int $id): Response
+    {
+        
+        if ($id) {
+            $verbForm = $entityManager->getRepository(VerbEntity\AbstractTimeForm::class)->find($id);
+        } else {
+            throw new \RuntimeException('Verb form doesn\'t exists');
+        }
+
+        $form = $this->createFormBuilder($verbForm)
+            ->add('yo', TextType::class)
+            ->add('tu', TextType::class)
+            ->add('el', TextType::class)
+            ->add('ella', TextType::class)
+            ->add('usted', TextType::class)
+            ->add('nosotros', TextType::class)
+            ->add('vosotros', TextType::class)
+            ->add('ellos', TextType::class)
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            $entityManager->flush();
+
+            return $this->redirectToRoute('list_verbs');
+        }
+        
+        return $this->render('default/edit_verb_form.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/add-modo-indicativo/{id}", methods="GET|POST", name="add_modo_indicativo", requirements={"id"="\d+"})
+     */
+    public function addModoIndicativo(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        if ($id) {
+            $infinitivo = $entityManager->getRepository(VerbEntity\Infinitivo::class)->find($id);
+        } else {
+            throw new \RuntimeException('Verb doesn\'t exists');
+        }
+
+        $verbForm = new VerbEntity\ModoIndicativo();
+
+        $form = $this->createFormBuilder($verbForm)
+            ->add('yo', TextType::class)
+            ->add('tu', TextType::class)
+            ->add('el', TextType::class)
+            ->add('ella', TextType::class)
+            ->add('usted', TextType::class)
+            ->add('nosotros', TextType::class)
+            ->add('vosotros', TextType::class)
+            ->add('ellos', TextType::class)
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $verbForm->setInfinitivo($infinitivo);
+
+            $entityManager->persist($verbForm);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('list_verbs');
+        }
+        
+        return $this->render('default/edit_verb_form.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/add-reterio-simple/{id}", methods="GET|POST", name="add_preterio_simple", requirements={"id"="\d+"})
+     */
+    public function addPreterioSimple(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        if ($id) {
+            $infinitivo = $entityManager->getRepository(VerbEntity\Infinitivo::class)->find($id);
+        } else {
+            throw new \RuntimeException('Verb doesn\'t exists');
+        }
+
+        $verbForm = new VerbEntity\PreterioSimple();
+
+        $form = $this->createFormBuilder($verbForm)
+            ->add('yo', TextType::class)
+            ->add('tu', TextType::class)
+            ->add('el', TextType::class)
+            ->add('ella', TextType::class)
+            ->add('usted', TextType::class)
+            ->add('nosotros', TextType::class)
+            ->add('vosotros', TextType::class)
+            ->add('ellos', TextType::class)
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $verbForm->setInfinitivo($infinitivo);
+
+            $entityManager->persist($verbForm);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('list_verbs');
+        }
+        
+        return $this->render('default/edit_verb_form.html.twig', [
             'form' => $form->createView(),
         ]);
     }

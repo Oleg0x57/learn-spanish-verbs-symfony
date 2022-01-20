@@ -1,0 +1,116 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit verb
+{% endblock %}
+
+{% block body %}
+	<div class="row">
+		{{ form_start(form) }}
+		<div class="row">
+			<div class="input-field col s12">
+				{{ form_label(form.yo) }}
+				{{ form_widget(form.yo) }}
+
+				<small>{{ form_help(form.yo) }}</small>
+
+				<div class="form-error">
+					{{ form_errors(form.yo) }}
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="input-field col s12">
+				{{ form_label(form.tu) }}
+				{{ form_widget(form.tu) }}
+
+				<small>{{ form_help(form.tu) }}</small>
+
+				<div class="form-error">
+					{{ form_errors(form.tu) }}
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="input-field col s12">
+				{{ form_label(form.el) }}
+				{{ form_widget(form.el) }}
+
+				<small>{{ form_help(form.el) }}</small>
+
+				<div class="form-error">
+					{{ form_errors(form.el) }}
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="input-field col s12">
+				{{ form_label(form.ella) }}
+				{{ form_widget(form.ella) }}
+
+				<small>{{ form_help(form.ella) }}</small>
+
+				<div class="form-error">
+					{{ form_errors(form.ella) }}
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="input-field col s12">
+				{{ form_label(form.usted) }}
+				{{ form_widget(form.usted) }}
+
+				<small>{{ form_help(form.usted) }}</small>
+
+				<div class="form-error">
+					{{ form_errors(form.usted) }}
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="input-field col s12">
+				{{ form_label(form.nosotros) }}
+				{{ form_widget(form.nosotros) }}
+
+				<small>{{ form_help(form.nosotros) }}</small>
+
+				<div class="form-error">
+					{{ form_errors(form.nosotros) }}
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="input-field col s12">
+				{{ form_label(form.vosotros) }}
+				{{ form_widget(form.vosotros) }}
+
+				<small>{{ form_help(form.vosotros) }}</small>
+
+				<div class="form-error">
+					{{ form_errors(form.vosotros) }}
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="input-field col s12">
+				{{ form_label(form.ellos) }}
+				{{ form_widget(form.ellos) }}
+
+				<small>{{ form_help(form.ellos) }}</small>
+
+				<div class="form-error">
+					{{ form_errors(form.ellos) }}
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<button class="btn waves-effect waves-light" type="submit" name="action">Save
+				<i class="material-icons right">send</i>
+			</button>
+			<a class="waves-effect waves-light btn" href="{{ path('list_verbs') }}">
+				<i class="material-icons left">arrow_back</i>Cancel
+			</a>
+		</div>
+		{{ form_end(form) }}
+	</div>
+{% endblock %}
