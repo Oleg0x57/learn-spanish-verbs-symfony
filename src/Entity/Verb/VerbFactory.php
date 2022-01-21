@@ -38,7 +38,7 @@ class VerbFactory
         $verbObject = new $verbClassName();
 
         if (!$verbObject instanceof AbstractTimeForm) {
-            throw new \RuntimeException('Class for type ' . $type . ' should be instance of AbstractTimeForm');
+            throw new \RuntimeException('Class ' . get_class($verbObject) . ' for type ' . $type . ' should be instance of ' . AbstractTimeForm::class);
         }
 
         return $verbObject;
