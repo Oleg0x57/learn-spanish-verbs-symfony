@@ -12,13 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
-{   
-    private const ROUTE_TO_FORM_MAP = [
-        'add_modo_indicativo' => TimeTypes::MODO_INDICATIVO,
-        'add_preterio_simple' => TimeTypes::PRETERIO_SIMPLE,
-        'add_futuro_simple'   => TimeTypes::FUTURO_SIMPLE,
-    ];
-    
+{  
     /**
      * @Route("/", name="list_verbs")
      */
@@ -106,18 +100,14 @@ class DefaultController extends AbstractController
      * @Route("/add-futuro-simple/{id}",   methods="GET|POST", name="add_futuro_simple", requirements={"id"="\d+"})
      */
     public function addNewTimeForm(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
-    {
-        $meta = $entityManager->getMetadataFactory()->getMetadataFor(VerbEntity\AbstractTimeForm::class);
-        $discriminatorMap = $meta->discriminatorMap;
-        $verbClassName = $discriminatorMap[self::ROUTE_TO_FORM_MAP[$request->attributes->get('_route')]];
-        
+    {       
         if ($id) {
             $infinitivo = $entityManager->getRepository(VerbEntity\Infinitivo::class)->find($id);
         } else {
             throw new \RuntimeException('Verb doesn\'t exists');
         }
 
-        $verbForm = new $verbClassName();
+        $verbForm = (new VerbEntity\VerbFactory($entityManager))->createFromRequest($request);
 
         $form = $this->createFormBuilder($verbForm)
             ->add('yo', TextType::class)
