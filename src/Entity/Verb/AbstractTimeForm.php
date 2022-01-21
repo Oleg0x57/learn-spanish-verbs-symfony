@@ -12,8 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
- * "modo_indicativo" = "ModoIndicativo",
- * "preterito_simple" = "PreterioSimple"
+ * TimeTypes::MODO_INDICATIVO = "ModoIndicativo",
+ * TimeTypes::PRETERIO_SIMPLE = "PreterioSimple",
+ * TimeTypes::FUTURO_SIMPLE = "FuturoSimple"
  * })
  */
 abstract class AbstractTimeForm
