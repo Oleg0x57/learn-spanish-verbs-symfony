@@ -8,13 +8,14 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=TimeFormRepository::class)
- * 
+ *
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
  * TimeTypes::MODO_INDICATIVO = "ModoIndicativo",
  * TimeTypes::PRETERIO_SIMPLE = "PreterioSimple",
- * TimeTypes::FUTURO_SIMPLE = "FuturoSimple"
+ * TimeTypes::FUTURO_SIMPLE   = "FuturoSimple",
+ * TimeTypes::FUTURO_PROXIMO  = "FuturoProximo"
  * })
  */
 abstract class AbstractTimeForm
@@ -173,6 +174,11 @@ abstract class AbstractTimeForm
         $this->ellos = $ellos;
 
         return $this;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
     }
 
     public function getInfinitivo(): ?Infinitivo

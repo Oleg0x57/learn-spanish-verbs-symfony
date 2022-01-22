@@ -20,10 +20,28 @@
 					<ul id="nav-mobile" class="right hide-on-med-and-down"></ul>
 				</div>
 			</nav>
-			<div class="container"> {% block body %}{% endblock %}
+			<div class="container"> {% block alerts %}{% endblock %}{% block body %}{% endblock %}
 				</div>
 				{% block javascripts %}
 					<script type="text/javascript" src="{{ asset('build/js/materialize.min.js') }}"></script>
 				{% endblock %}
+				<footer class="page-footer">
+					<div class="container">
+						<div class="row">
+							<div class="col l6 s12">
+								<h5 class="white-text">Learn spanish verbs</h5>
+							</div>
+							<div class="col l4 offset-l2 s12">
+								<h5 class="white-text">Links</h5>
+								<ul></ul>
+							</div>
+						</div>
+					</div>
+					<div class="footer-copyright">
+						<div class="container">
+							© 2022 oleg_0x57
+						</div>
+					</div>
+				</footer>
 			</body>
 		</html>

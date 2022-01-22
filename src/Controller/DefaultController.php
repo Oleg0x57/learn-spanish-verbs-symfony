@@ -146,7 +146,8 @@ class DefaultController extends AbstractController
     /**
      * @Route("/add-modo-indicativo/{id}", methods="GET|POST", name="add_modo_indicativo", requirements={"id"="\d+"})
      * @Route("/add-preterio-simple/{id}", methods="GET|POST", name="add_preterio_simple", requirements={"id"="\d+"})
-     * @Route("/add-futuro-simple/{id}",   methods="GET|POST", name="add_futuro_simple", requirements={"id"="\d+"})
+     * @Route("/add-futuro-simple/{id}",   methods="GET|POST", name="add_futuro_simple",   requirements={"id"="\d+"})
+     * @Route("/add-futuro-proximo/{id}",  methods="GET|POST", name="add_futuro_proximo",  requirements={"id"="\d+"})
      */
     public function addNewTimeForm(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
     {

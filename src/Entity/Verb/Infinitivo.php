@@ -2,6 +2,7 @@
 
 namespace App\Entity\Verb;
 
+use App\Enum\Verb\TimeTypes;
 use App\Repository\Verb\InfinitivoRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -88,16 +89,45 @@ class Infinitivo
 
     public function hasModoIndicativo(): bool
     {
+        foreach ($this->getTimeForms() as $verbForm) {
+            if ($verbForm->getTimeType() === TimeTypes::MODO_INDICATIVO) {
+                return true;
+            }
+        }
+        
         return false;
     }
 
     public function hasPreterioSimple(): bool
     {
+        foreach ($this->getTimeForms() as $verbForm) {
+            if ($verbForm->getTimeType() === TimeTypes::PRETERIO_SIMPLE) {
+                return true;
+            }
+        }
+        
         return false;
     }
 
     public function hasFuturoSimple(): bool
     {
+        foreach ($this->getTimeForms() as $verbForm) {
+            if ($verbForm->getTimeType() === TimeTypes::FUTURO_SIMPLE) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    public function hasFuturoProximo(): bool
+    {
+        foreach ($this->getTimeForms() as $verbForm) {
+            if ($verbForm->getTimeType() === TimeTypes::FUTURO_PROXIMO) {
+                return true;
+            }
+        }
+        
         return false;
     }
 

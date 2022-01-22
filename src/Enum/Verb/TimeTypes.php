@@ -6,10 +6,12 @@ class TimeTypes
     const MODO_INDICATIVO = 'modo_indicativo';
     const PRETERIO_SIMPLE = 'preterito_simple';
     const FUTURO_SIMPLE   = 'futuro_simple';
+    const FUTURO_PROXIMO  = 'futuro_proximo';
 
     const MAP_TITLES = [
         self::MODO_INDICATIVO => 'Настоящее',
         self::PRETERIO_SIMPLE => 'Прошедшее',
         self::FUTURO_SIMPLE   => 'Будущее',
+        self::FUTURO_PROXIMO  => 'Будущее',
     ];
 }
