@@ -17,30 +17,38 @@
 		}
 	</style>
 
-	<div class="edit_form">
-		{{ form_start(form) }}
-		<div class="my-custom-class-for-errors">
-			{{ form_errors(form) }}
-		</div>
-
-		<div class="row">
-			<div class="form-control">
-				<i class="fa fa-calendar"></i>
-				{{ form_label(form.title) }}
-				{{ form_widget(form.title) }}
-
-				<small>{{ form_help(form.title) }}</small>
-
-				<div class="form-error">
-					{{ form_errors(form.title) }}
-				</div>
-
-			</div>
-		</div>
-		<button class="btn waves-effect waves-light" type="submit" name="action">Save
-			<i class="material-icons right">send</i>
-		</button>
-		{{ form_end(form) }}
-
+	{{ form_start(form) }}
+	<div class="my-custom-class-for-errors">
+		{{ form_errors(form) }}
 	</div>
-{% endblock %}
+
+	<div class="row">
+		<div class="form-control">
+			{{ form_label(form.title) }}
+			{{ form_widget(form.title) }}
+
+			<small>{{ form_help(form.title) }}</small>
+
+			<div class="form-error">
+				{{ form_errors(form.title) }}
+			</div>
+
+		</div>
+	</div>
+	<div class="row">
+		<labeL>
+			{{ form_widget(form.isRegular, {'attr': {'class': 'filled-in'}}) }}
+			<span>is regular</span>
+		</label>
+		<small>{{ form_help(form.isRegular) }}</small>
+		<div class="form-error">
+			{{ form_errors(form.isRegular) }}
+		</div>
+	</div>
+
+	<button class="btn waves-effect waves-light" type="submit" name="action">Save
+		<i class="material-icons right">send</i>
+	</button>
+	{{ form_end(form) }}
+
+</div>{% endblock %}

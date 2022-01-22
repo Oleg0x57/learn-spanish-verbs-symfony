@@ -7,10 +7,10 @@ use App\Entity\Verb as EntityVerb;
 abstract class VerbFormFactory
 {
     /** string */
-    private $verb;
+    protected $verb;
 
     /** string */
-    private $verbRoot;
+    protected $verbRoot;
 
     public function __construct(string $verb, string $verbRoot)
     {

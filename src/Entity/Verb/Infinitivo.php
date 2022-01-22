@@ -29,6 +29,11 @@ class Infinitivo
      */
     private $timeForms;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isRegular;
+
     public function __construct()
     {
         $this->timeForms = new ArrayCollection();
@@ -81,11 +86,6 @@ class Infinitivo
         return $this;
     }
 
-    public function isRegular(): bool
-    {
-        return true;
-    }
-
     public function hasModoIndicativo(): bool
     {
         return false;
@@ -99,5 +99,17 @@ class Infinitivo
     public function hasFuturoSimple(): bool
     {
         return false;
+    }
+
+    public function getIsRegular(): ?bool
+    {
+        return $this->isRegular;
+    }
+
+    public function setIsRegular(bool $isRegular): self
+    {
+        $this->isRegular = $isRegular;
+
+        return $this;
     }
 }

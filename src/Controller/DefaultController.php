@@ -6,64 +6,90 @@ use App\Entity\Verb as VerbEntity;
 use App\Entity\Verb\VerbManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
-{  
-    // TODO: 1) make migration ADD COLUMN is_irregular BOOLEAN DEFAULT FALSE;
-    // TODO: 2) add this field to form of infinitivo
-    // TODO: 3) make Factories for -ar, -er -ir regular verbs for 3 forms
-    // TODO: 4) make VerbManager with generateFormsFromInfinitivo and regenerateFormsFromInfinitivo and deeleteAllForms
+{
+    // TODO: + 1) make migration ADD COLUMN is_irregular BOOLEAN DEFAULT FALSE;
+    // TODO: + 2) add this field to form of infinitivo
+    // TODO: + 3) make Factories for -ar, -er -ir regular verbs for 3 forms
+    // TODO: + 4) make VerbManager with generateFormsFromInfinitivo and regenerateFormsFromInfinitivo and deeleteAllForms
     // TODO: 5) disable buttons to add form if already exists
     // TODO: 6) add unique index (infinitivo_id, type) on table of verbs form
-    
+
     /**
      * @Route("/", name="list_verbs")
      */
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
         $verbsList = $entityManager->getRepository(VerbEntity\Infinitivo::class)->findAll();
-        
+
         return $this->render('default/index.html.twig', [
             'verbsList' => $verbsList,
         ]);
     }
 
     /**
-     * @Route("/edit-verb/{id}", methods="GET|POST", name="edit_verb", requirements={"id"="\d+"})
      * @Route("/add-verb", methods="GET|POST", name="add_verb")
      */
-    public function editVerb(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    public function addVerb(Request $request, EntityManagerInterface $entityManager): Response
     {
-        if ($id) {
-            $infinitivo = $entityManager->getRepository(VerbEntity\Infinitivo::class)->find($id);
-        } else {
-            $infinitivo = new VerbEntity\Infinitivo();
-        }
+        $infinitivo = new VerbEntity\Infinitivo();
 
-        $form = $this->createFormBuilder($infinitivo)->add('title', TextType::class)->getForm();
+        $form = $this->createFormBuilder($infinitivo)
+            ->add('title', TextType::class)
+            ->add('isRegular', CheckboxType::class)
+            ->getForm();
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-
-            $entityManager->persist($infinitivo);
-            $entityManager->flush();
+            $manager = new VerbManager($entityManager);
+            $manager->createVerb($infinitivo);
 
             return $this->redirectToRoute('list_verbs');
         }
-        
+
         return $this->render('default/edit_verb.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/delete-verb/{id}", methods="POST", name="delete_verb", requirements={"id"="\d+"})
+     * @Route("/edit-verb/{id}", methods="GET|POST", name="edit_verb", requirements={"id"="\d+"})
+     */
+    public function editVerb(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        if ($id) {
+            $infinitivo = $entityManager->getRepository(VerbEntity\Infinitivo::class)->find($id);
+        } else {
+            throw new \RuntimeException('Verb doesn\'t exists');
+        }
+
+        $form = $this->createFormBuilder($infinitivo)
+            ->add('title', TextType::class)
+            ->add('isRegular', CheckboxType::class)
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('list_verbs');
+        }
+
+        return $this->render('default/edit_verb.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/delete-verb/{id}", methods="GET|POST", name="delete_verb", requirements={"id"="\d+"})
      */
     public function deleteVerb(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
     {
@@ -84,7 +110,7 @@ class DefaultController extends AbstractController
      */
     public function editVerbForm(Request $request, EntityManagerInterface $entityManager, int $id): Response
     {
-        
+
         if ($id) {
             $verbForm = $entityManager->getRepository(VerbEntity\AbstractTimeForm::class)->find($id);
         } else {
@@ -111,12 +137,11 @@ class DefaultController extends AbstractController
 
             return $this->redirectToRoute('list_verbs');
         }
-        
+
         return $this->render('default/edit_verb_form.html.twig', [
             'form' => $form->createView(),
         ]);
     }
-
 
     /**
      * @Route("/add-modo-indicativo/{id}", methods="GET|POST", name="add_modo_indicativo", requirements={"id"="\d+"})
@@ -124,7 +149,7 @@ class DefaultController extends AbstractController
      * @Route("/add-futuro-simple/{id}",   methods="GET|POST", name="add_futuro_simple", requirements={"id"="\d+"})
      */
     public function addNewTimeForm(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
-    {       
+    {
         if ($id) {
             $infinitivo = $entityManager->getRepository(VerbEntity\Infinitivo::class)->find($id);
         } else {
@@ -154,7 +179,7 @@ class DefaultController extends AbstractController
 
             return $this->redirectToRoute('list_verbs');
         }
-        
+
         return $this->render('default/edit_verb_form.html.twig', [
             'form' => $form->createView(),
         ]);
