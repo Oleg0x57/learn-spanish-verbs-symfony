@@ -80,4 +80,24 @@ class Infinitivo
 
         return $this;
     }
+
+    public function isRegular(): bool
+    {
+        return true;
+    }
+
+    public function hasModoIndicativo(): bool
+    {
+        return false;
+    }
+
+    public function hasPreterioSimple(): bool
+    {
+        return false;
+    }
+
+    public function hasFuturoSimple(): bool
+    {
+        return false;
+    }
 }

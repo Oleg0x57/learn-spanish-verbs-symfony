@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Verb as VerbEntity;
-use App\Enum\Verb\TimeTypes;
+use App\Entity\Verb\VerbManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -13,6 +13,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
 {  
+    // TODO: 1) make migration ADD COLUMN is_irregular BOOLEAN DEFAULT FALSE;
+    // TODO: 2) add this field to form of infinitivo
+    // TODO: 3) make Factories for -ar, -er -ir regular verbs for 3 forms
+    // TODO: 4) make VerbManager with generateFormsFromInfinitivo and regenerateFormsFromInfinitivo and deeleteAllForms
+    // TODO: 5) disable buttons to add form if already exists
+    // TODO: 6) add unique index (infinitivo_id, type) on table of verbs form
+    
     /**
      * @Route("/", name="list_verbs")
      */
@@ -53,6 +60,23 @@ class DefaultController extends AbstractController
         return $this->render('default/edit_verb.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/delete-verb/{id}", methods="POST", name="delete_verb", requirements={"id"="\d+"})
+     */
+    public function deleteVerb(Request $request, EntityManagerInterface $entityManager, int $id = null): Response
+    {
+        if ($id) {
+            $infinitivo = $entityManager->getRepository(VerbEntity\Infinitivo::class)->find($id);
+        } else {
+            throw new \RuntimeException('Verb doesn\'t exists');
+        }
+
+        $manager = new VerbManager($entityManager);
+        $manager->deleteVerb($infinitivo);
+
+        return $this->redirectToRoute('list_verbs');
     }
 
     /**

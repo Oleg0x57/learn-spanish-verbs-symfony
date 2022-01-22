@@ -6,15 +6,12 @@ use App\Enum\Verb\TimeTypes;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @ORM\Entity
- */
 class VerbFactory
 {
     private const ROUTE_TO_FORM_MAP = [
         'add_modo_indicativo' => TimeTypes::MODO_INDICATIVO,
         'add_preterio_simple' => TimeTypes::PRETERIO_SIMPLE,
-        'add_futuro_simple' => TimeTypes::FUTURO_SIMPLE,
+        'add_futuro_simple'   => TimeTypes::FUTURO_SIMPLE,
     ];
 
     /** EntityManagerInterface */
