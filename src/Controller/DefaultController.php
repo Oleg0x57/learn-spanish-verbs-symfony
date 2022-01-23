@@ -27,7 +27,7 @@ class DefaultController extends AbstractController
      */
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $verbsList = $entityManager->getRepository(VerbEntity\Infinitivo::class)->findAll();
+        $verbsList = $entityManager->getRepository(VerbEntity\Infinitivo::class)->findBy([], ['title' => 'ASC']);;
 
         return $this->render('default/index.html.twig', [
             'verbsList' => $verbsList,
@@ -88,7 +88,15 @@ class DefaultController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            $manager = new VerbManager($entityManager);
+            try {
+                $manager->updateVerb($infinitivo);
+            } catch (VerbException $e) {
+                $this->addFlash(
+                    'error',
+                    $e->getMessage()
+                );
+            }
 
             return $this->redirectToRoute('list_verbs');
         }

@@ -18,10 +18,24 @@ class VerbManager
 
     public function createVerb(Infinitivo $infinitivo)
     {
-        $this->entityManager->persist($infinitivo);
-        
-        $this->generateFormsForInfinitivo($infinitivo);
+        $this->entityManager->persist($infinitivo);  
+        $this->entityManager->flush();
 
+        $this->generateFormsForInfinitivo($infinitivo);
+    }
+
+    public function updateVerb($infinitivo)
+    {
+        $this->entityManager->flush();
+        
+        $this->deleteAllFormsForInfinitivo($infinitivo);
+        $this->generateFormsForInfinitivo($infinitivo);
+    }
+
+    public function deleteVerb(Infinitivo $infinitivo)
+    {
+        $this->deleteAllFormsForInfinitivo($infinitivo);
+        $this->entityManager->remove($infinitivo);
         $this->entityManager->flush();
     }
 
@@ -72,36 +86,23 @@ class VerbManager
             $futuroSimple->setInfinitivo($infinitivo);
             $futuroProximo->setInfinitivo($infinitivo);
 
-            $this->entityManager->persist($modoIndicativo);
             $this->entityManager->persist($preterioSimple);
+            $this->entityManager->persist($modoIndicativo);
             $this->entityManager->persist($futuroSimple);
             $this->entityManager->persist($futuroProximo);
 
             $this->entityManager->flush();
         } else {
-            throw new VerbException('Verb ' . $verbTitle . ' is irregular, use manul create forms');
+            throw new VerbException('Verb ' . $verbTitle . ' is irregular, use manul create forms'); // TODO: create VerbIrregularException and use it
         }
     }
 
-    public function deleteAllFormsForInfinitivo(Infinitivo $infinitivo)
+    protected function deleteAllFormsForInfinitivo(Infinitivo $infinitivo)
     {
         foreach ($infinitivo->getTimeForms() as $verbForm) {
             $this->entityManager->remove($verbForm);
         }
 
-        $this->entityManager->flush();
-    }
-
-    public function regenerateFormsForInfinitivo(Infinitivo $infinitivo)
-    {
-        $this->deleteAllFormsForInfinitivo($infinitivo);
-        $this->generateFormsForInfinitivo($infinitivo);
-    }
-
-    public function deleteVerb(Infinitivo $infinitivo)
-    {
-        $this->deleteAllFormsForInfinitivo($infinitivo);
-        $this->entityManager->remove($infinitivo);
         $this->entityManager->flush();
     }
 }
