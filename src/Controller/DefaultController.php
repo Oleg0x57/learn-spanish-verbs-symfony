@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Verb as VerbEntity;
 use App\Entity\Verb\VerbManager;
+use App\Exception\VerbException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -18,7 +19,7 @@ class DefaultController extends AbstractController
     // TODO: + 2) add this field to form of infinitivo
     // TODO: + 3) make Factories for -ar, -er -ir regular verbs for 3 forms
     // TODO: + 4) make VerbManager with generateFormsFromInfinitivo and regenerateFormsFromInfinitivo and deeleteAllForms
-    // TODO: 5) disable buttons to add form if already exists
+    // TODO: + 5) disable buttons to add form if already exists
     // TODO: 6) add unique index (infinitivo_id, type) on table of verbs form
 
     /**
@@ -50,7 +51,14 @@ class DefaultController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $manager = new VerbManager($entityManager);
-            $manager->createVerb($infinitivo);
+            try {
+                $manager->createVerb($infinitivo);
+            } catch (VerbException $e) {
+                $this->addFlash(
+                    'error',
+                    $e->getMessage()
+                );
+            }
 
             return $this->redirectToRoute('list_verbs');
         }

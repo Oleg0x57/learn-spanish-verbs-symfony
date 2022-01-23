@@ -2,6 +2,7 @@
 
 namespace App\Entity\Verb;
 
+use App\Exception\VerbException;
 use App\Factory\Verb as VerbFactory;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -18,29 +19,30 @@ class VerbManager
     public function createVerb(Infinitivo $infinitivo)
     {
         $this->entityManager->persist($infinitivo);
-        $this->entityManager->flush();
         
         $this->generateFormsForInfinitivo($infinitivo);
+
+        $this->entityManager->flush();
     }
 
-    public function generateFormsForInfinitivo(Infinitivo $infinitivo)
+    protected function generateFormsForInfinitivo(Infinitivo $infinitivo)
     {
         $verbTitle = $infinitivo->getTitle();
 
         if ($infinitivo->hasModoIndicativo()) {
-            throw new \RuntimeException('Verb ' . $verbTitle . ' already has Modo Indicativo form, use regenerate button');
+            throw new VerbException('Verb ' . $verbTitle . ' already has Modo Indicativo form');
         }
 
         if ($infinitivo->hasPreterioSimple()) {
-            throw new \RuntimeException('Verb ' . $verbTitle . ' already has Preterio Simple form, use regenerate button');
+            throw new VerbException('Verb ' . $verbTitle . ' already has Preterio Simple form');
         }
 
         if ($infinitivo->hasFuturoSimple()) {
-            throw new \RuntimeException('Verb ' . $verbTitle . ' already has Futuro Simple form, use regenerate button');
+            throw new VerbException('Verb ' . $verbTitle . ' already has Futuro Simple form');
         }
 
         if ($infinitivo->hasFuturoProximo()) {
-            throw new \RuntimeException('Verb ' . $verbTitle . ' already has Futuro Proximo form, use regenerate button');
+            throw new VerbException('Verb ' . $verbTitle . ' already has Futuro Proximo form');
         }
 
         if ($infinitivo->getIsRegular()) {
@@ -77,7 +79,7 @@ class VerbManager
 
             $this->entityManager->flush();
         } else {
-            throw new \RuntimeException('Verb ' . $verbTitle . ' is irregular, use manul create forms');
+            throw new VerbException('Verb ' . $verbTitle . ' is irregular, use manul create forms');
         }
     }
 
