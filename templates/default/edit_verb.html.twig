@@ -26,13 +26,21 @@
 		<div class="form-control">
 			{{ form_label(form.title) }}
 			{{ form_widget(form.title) }}
-
 			<small>{{ form_help(form.title) }}</small>
-
 			<div class="form-error">
 				{{ form_errors(form.title) }}
 			</div>
-
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="form-control">
+			{{ form_label(form.translation) }}
+			{{ form_widget(form.translation) }}
+			<small>{{ form_help(form.translation) }}</small>
+			<div class="form-error">
+				{{ form_errors(form.translation) }}
+			</div>
 		</div>
 	</div>
 	<div class="row">

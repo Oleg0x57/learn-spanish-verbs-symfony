@@ -42,6 +42,7 @@ class DefaultController extends AbstractController
 
         $form = $this->createFormBuilder($infinitivo)
             ->add('title', TextType::class)
+            ->add('translation', TextType::class)
             ->add('isRegular', CheckboxType::class)
             ->getForm();
 
@@ -72,6 +73,7 @@ class DefaultController extends AbstractController
 
         $form = $this->createFormBuilder($infinitivo)
             ->add('title', TextType::class)
+            ->add('translation', TextType::class)
             ->add('isRegular', CheckboxType::class)
             ->getForm();
 

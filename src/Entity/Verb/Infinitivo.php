@@ -33,7 +33,12 @@ class Infinitivo
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isRegular;
+    private $isRegular = false;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $translation;
 
     public function __construct()
     {
@@ -139,6 +144,18 @@ class Infinitivo
     public function setIsRegular(bool $isRegular): self
     {
         $this->isRegular = $isRegular;
+
+        return $this;
+    }
+
+    public function getTranslation(): ?string
+    {
+        return $this->translation;
+    }
+
+    public function setTranslation(string $translation): self
+    {
+        $this->translation = $translation;
 
         return $this;
     }
